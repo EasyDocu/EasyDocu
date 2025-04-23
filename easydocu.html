@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyDocu – Rechnung erstellen</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.05);
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>EasyDocu – Rechnung erstellen</h1>
+<form id="invoiceForm">
+    <label>Dein Firmenname / Name</label>
+    <input type="text" id="senderName">
+
+    <label>Deine Adresse</label>
+    <textarea id="senderAddress"></textarea>
+
+    <label>USt-ID oder Hinweis auf Kleinunternehmerregelung</label>
+    <input type="text" id="taxInfo">
+
+    <label>Kundendaten (Name + Adresse)</label>
+    <textarea id="client"></textarea>
+
+    <label>Rechnungsnummer</label>
+    <input type="text" id="invoiceNumber">
+
+    <label>Rechnungsdatum</label>
+    <input type="date" id="invoiceDate">
+
+    <label>Leistungszeitraum / Datum</label>
+    <input type="text" id="servicePeriod">
+
+    <label>Leistungsbeschreibung</label>
+    <textarea id="services"></textarea>
+
+    <label>Gesamtbetrag (inkl. Steuer)</label>
+    <input type="text" id="totalAmount">
+
+    <label>Zahlungsfrist</label>
+    <input type="text" id="dueDate">
+
+    <label>Bankverbindung (IBAN, BIC, Kontoinhaber)</label>
+    <textarea id="bankDetails"></textarea>
+
+    <button type="button" onclick="generatePDF()">PDF herunterladen</button>
+</form>
+
+<script>
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(12);
+    doc.text("Rechnung", 10, 10);
+    doc.text("Von:", 10, 20);
+    doc.text(document.getElementById("senderName").value, 10, 30);
+    doc.text(document.getElementById("senderAddress").value, 10, 40);
+    doc.text(document.getElementById("taxInfo").value, 10, 50);
+
+    doc.text("An:", 10, 65);
+    doc.text(document.getElementById("client").value, 10, 75);
+
+    doc.text("Rechnungsnummer: " + document.getElementById("invoiceNumber").value, 10, 90);
+    doc.text("Datum: " + document.getElementById("invoiceDate").value, 10, 100);
+    doc.text("Leistungszeitraum: " + document.getElementById("servicePeriod").value, 10, 110);
+
+    doc.text("Leistungen:", 10, 125);
+    doc.text(document.getElementById("services").value, 10, 135);
+
+    doc.text("Gesamtbetrag: " + document.getElementById("totalAmount").value + " €", 10, 150);
+
+    doc.text("Zahlbar bis: " + document.getElementById("dueDate").value, 10, 165);
+
+    doc.text("Bankverbindung:", 10, 180);
+    doc.text(document.getElementById("bankDetails").value, 10, 190);
+
+    doc.text("Hinweis: Diese Rechnung ist ohne Unterschrift gültig.", 10, 205);
+
+    doc.save("EasyDocu_Rechnung.pdf");
+}
+</script>
+</body>
+</html>
